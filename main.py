@@ -1,16 +1,72 @@
-# This is a sample Python script.
+# ДЗ 13.2. Клас "Цифровий лічильник"
+# Створити клас цифрового лічильника. У класі реалізувати методи:
+# встановлення максимального значення лічильника,
+# встановлення мінімального значення лічильника
+# встановлення початкового значення лічильника
+# метод step_up збільшує лічильник на 1. Метод можна викликати до тих пір, поки значення досягне максимуму. При досягненні максимуму слід викинути (raise) виняток ValueError, з описом, що досягнуто максимумуʼ
+# метод step_down зменшує лічильник на 1. Метод можна викликати до тих пір, поки значення не досягне мінімуму. При досягненні мінімуму потрібно викинути (raise) виняток ValueError, з описом, що досягнутий мінімум
+# повернення поточного значення лічильника
+# Початкове, мінімальне та максимальне значення лічильника також можуть бути додані в метод ініціалізації екземпляра класу.
+# Приблизний каркас для класу та варіанти перевірки. Вам потрібно дописати необхідне замість pass
+class Counter:
+    def __init__(self, current=1, min_value=0, max_value=10):
+        self.current = current        # Встановлюємо початкове значення лічильника
+        self.min_value = min_value    # Встановлюємо мінімальне значення лічильника
+        self.max_value = max_value    # Встановлюємо максимальне значення лічильника
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+    def set_current(self, start):
+        if self.min_value <= start <= self.max_value:
+            self.current = start      # Встановлюємо нове початкове значення, якщо воно між мінімальним та максимальним
+        else:
+            raise ValueError("Початкове значення повинно бути в межах мінімального і максимального")
 
+    def set_max(self, max_max):
+        if max_max >= self.min_value:
+            self.max_value = max_max  # Встановлюємо нове максимальне значення, якщо воно більше або дорівнює мінімальному
+        else:
+            raise ValueError("Максимальне значення повинно бути більше або дорівнювати мінімальному")
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+    def set_min(self, min_min):
+        if min_min <= self.max_value:
+            self.min_value = min_min  # Встановлюємо нове мінімальне значення, якщо воно менше або дорівнює максимальному
+        else:
+            raise ValueError("Мінімальне значення повинно бути менше або дорівнювати максимальному")
 
+    def step_up(self):
+        if self.current < self.max_value:
+            self.current += 1         # Збільшуємо значення лічильника на 1, якщо не досягнуто максимального значення
+        else:
+            raise ValueError("Досягнуто максимуму")  # Викидаємо виняток, якщо досягнуто максимуму
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+    def step_down(self):
+        if self.current > self.min_value:
+            self.current -= 1         # Зменшуємо значення лічильника на 1, якщо не досягнуто мінімального значення
+        else:
+            raise ValueError("Досягнуто мінімуму")  # Викидаємо виняток, якщо досягнуто мінімуму
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    def get_current(self):
+        return self.current           # Повертаємо поточне значення лічильника
+
+# Приклади використання
+counter = Counter()                   # Створюємо новий об'єкт лічильника з початковими значеннями
+counter.set_current(7)                # Встановлюємо початкове значення лічильника 7
+counter.step_up()                     # Збільшуємо значення лічильника на 1 (тепер 8)
+counter.step_up()                     # Збільшуємо значення лічильника на 1 (тепер 9)
+counter.step_up()                     # Збільшуємо значення лічильника на 1 (тепер 10)
+assert counter.get_current() == 10, 'Test1'  # Перевіряємо, що поточне значення лічильника дорівнює 10
+try:
+    counter.step_up()  # ValueError   # Спроба збільшити значення понад максимум
+except ValueError as e:
+    print(e)  # Достигнут максимум    # Виводимо повідомлення про досягнення максимуму
+assert counter.get_current() == 10, 'Test2'  # Перевіряємо, що поточне значення лічильника все ще дорівнює 10
+
+counter.set_min(7)                    # Встановлюємо нове мінімальне значення лічильника 7
+counter.step_down()                   # Зменшуємо значення лічильника на 1 (тепер 9)
+counter.step_down()                   # Зменшуємо значення лічильника на 1 (тепер 8)
+counter.step_down()                   # Зменшуємо значення лічильника на 1 (тепер 7)
+assert counter.get_current() == 7, 'Test3'  # Перевіряємо, що поточне значення лічильника дорівнює 7
+try:
+    counter.step_down()  # ValueError # Спроба зменшити значення нижче мінімуму
+except ValueError as e:
+    print(e)  # Достигнут минимум     # Виводимо повідомлення про досягнення мінімуму
+assert counter.get_current() == 7, 'Test4'  # Перевіряємо, що поточне значення лічильника все ще дорівнює 7
